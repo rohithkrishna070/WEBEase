@@ -46,37 +46,177 @@ def setup_page_header(title: str, icon: str = "♿", subtitle: str = "") -> None
         seed_if_empty()
         st.session_state["db_initialized"] = True
 
-    # Shared Custom CSS for clean, professional typography and cards
+    # Modern GovTech / Academic Emerald Theme CSS
     st.markdown(
         """
         <style>
-        .main-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--text-color, #1E293B);
-            margin-bottom: 0.2rem;
+        /* Google Fonts & Global Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        html, body, [class*="css"] {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
         }
+
+        /* GovTech Institutional Portal Header */
+        .gov-portal-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(5, 150, 105, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 9999px;
+            color: #34D399;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        .main-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #F8FAFC 20%, #E2E8F0 70%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
         .subtitle {
             font-size: 1.05rem;
-            color: var(--text-color, #64748B);
-            opacity: 0.85;
-            margin-bottom: 1.2rem;
+            color: #94A3B8;
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: 1.4rem;
         }
+
+        /* GovTech Disclaimer Notice Banner */
         .synthetic-banner {
-            background-color: rgba(245, 158, 11, 0.15);
-            border-left: 5px solid #F59E0B;
-            padding: 12px 16px;
-            border-radius: 4px;
-            color: inherit;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-        }
-        .metric-card {
-            background-color: var(--secondary-background-color, #F8FAFC);
-            border: 1px solid rgba(128, 128, 128, 0.2);
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9));
+            border: 1px solid #334155;
+            border-left: 4px solid #10B981;
+            padding: 12px 18px;
             border-radius: 8px;
-            padding: 16px;
-            text-align: center;
+            color: #CBD5E1;
+            font-size: 0.88rem;
+            margin-bottom: 1.6rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Enhanced Metric Scorecards (GovTech Emerald Style) */
+        [data-testid="stMetric"] {
+            background: #1E293B !important;
+            border: 1px solid #334155 !important;
+            border-top: 3px solid #059669 !important;
+            border-radius: 12px !important;
+            padding: 16px 20px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+
+        [data-testid="stMetric"]:hover {
+            transform: translateY(-2px);
+            border-color: #059669 !important;
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15) !important;
+        }
+
+        [data-testid="stMetricLabel"] {
+            color: #94A3B8 !important;
+            font-size: 0.82rem !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+        }
+
+        [data-testid="stMetricValue"] {
+            color: #F8FAFC !important;
+            font-size: 1.85rem !important;
+            font-weight: 700 !important;
+        }
+
+        /* Streamlit Native Button Polish */
+        .stButton button {
+            background-color: #059669 !important;
+            color: #FFFFFF !important;
+            border: 1px solid #10B981 !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            transition: all 0.15s ease-in-out !important;
+        }
+
+        .stButton button:hover {
+            background-color: #047857 !important;
+            border-color: #34D399 !important;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35) !important;
+        }
+
+        /* Streamlit Tabs Polish */
+        .stTabs [data-baseweb="tab-list"] {
+            border-bottom: 2px solid #334155 !important;
+            gap: 12px !important;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            color: #94A3B8 !important;
+            font-weight: 600 !important;
+            border-radius: 6px 6px 0 0 !important;
+            padding: 8px 16px !important;
+        }
+
+        .stTabs [data-baseweb="tab"][aria-selected="true"] {
+            color: #34D399 !important;
+            border-bottom: 2px solid #10B981 !important;
+            background: rgba(5, 150, 105, 0.1) !important;
+        }
+
+        /* Expanders and Containers */
+        [data-testid="stExpander"] {
+            background-color: #1E293B !important;
+            border: 1px solid #334155 !important;
+            border-radius: 10px !important;
+        }
+
+        /* Custom Badges */
+        .badge-emerald {
+            background: rgba(5, 150, 105, 0.2);
+            color: #34D399;
+            border: 1px solid #059669;
+            border-radius: 9999px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-amber {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+            border: 1px solid #D97706;
+            border-radius: 9999px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60A5FA;
+            border: 1px solid #2563EB;
+            border-radius: 9999px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Sidebar GovTech Customization */
+        [data-testid="stSidebar"] {
+            background-color: #0B1120 !important;
+            border-right: 1px solid #1E293B !important;
         }
         </style>
         """,
@@ -85,9 +225,20 @@ def setup_page_header(title: str, icon: str = "♿", subtitle: str = "") -> None
 
     # Sidebar Header & Disclaimer
     with st.sidebar:
-        st.markdown("### 🏛️ **SmartWeb Access**")
-        st.caption("Fuzzy TOPSIS & VIKOR Decision Support System")
-        st.markdown("---")
+        st.markdown(
+            """
+            <div style="padding: 10px 0; border-bottom: 1px solid #1E293B; margin-bottom: 15px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:1.4rem;">🏛️</span>
+                    <div>
+                        <div style="font-weight:800; font-size:1.05rem; color:#F8FAFC; letter-spacing:-0.01em;">WebEase DSS</div>
+                        <div style="font-size:0.75rem; color:#10B981; font-weight:600;">Academic & Civic Audit Edition</div>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
         st.info(
             "📌 **Research / Demo Notice**\n\n"
             "Records displayed are **synthetic demonstration data** "
@@ -97,7 +248,15 @@ def setup_page_header(title: str, icon: str = "♿", subtitle: str = "") -> None
         )
         st.markdown("---")
 
-    # Page Main Header
+    # Page Main Header with GovTech Pill
+    st.markdown(
+        """
+        <div class="gov-portal-tag">
+            <span>●</span> Official Decision Support System
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     st.markdown(f"<div class='main-title'>{icon} {title}</div>", unsafe_allow_html=True)
     if subtitle:
         st.markdown(f"<div class='subtitle'>{subtitle}</div>", unsafe_allow_html=True)
@@ -106,9 +265,9 @@ def setup_page_header(title: str, icon: str = "♿", subtitle: str = "") -> None
     st.markdown(
         """
         <div class="synthetic-banner">
-            ⚠️ <strong>Notice:</strong> Demonstration records shown are synthetic evaluation benchmarks 
-            designed to evaluate Fuzzy TOPSIS & VIKOR prioritization. No real institutional servers were 
-            scanned without authorization.
+            🛡️ <strong>Methodological Provenance Notice:</strong> Evaluation records in this workspace 
+            serve as reproducible scientific benchmarks under WCAG 2.1/2.2. Prioritization rankings are 
+            derived deterministically using Fuzzy TOPSIS and VIKOR multi-criteria algorithms.
         </div>
         """,
         unsafe_allow_html=True,
@@ -118,3 +277,10 @@ def setup_page_header(title: str, icon: str = "♿", subtitle: str = "") -> None
 def get_cached_issues():
     """Retrieve issues from SQLite and cache in Streamlit session state."""
     return load_all_issues()
+
+
+def render_badge(text: str, variant: str = "emerald") -> str:
+    """Return HTML string for a styled GovTech badge."""
+    css_class = f"badge-{variant}" if variant in ("emerald", "amber", "blue") else "badge-emerald"
+    return f"<span class='{css_class}'>{text}</span>"
+
