@@ -1,8 +1,31 @@
-"""Page 4: Repair Prioritization Engine (Fuzzy TOPSIS & VIKOR).
+"""
+================================================================================
+MODULE: pages.4_Prioritization
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides the interactive Multi-Criteria Decision Making (MCDM) prioritization engine,
+   allowing users to select alternative sets (websites, pages, statuses), customize criterion
+   weights, run Fuzzy TOPSIS and VIKOR simultaneously, and inspect side-by-side rankings.
 
-Provides interactive multi-criteria decision prioritization allowing users to
-select websites, specific pages, or custom alternative sets, adjust criterion
-weights, view side-by-side rankings, and inspect criteria-driven rationales.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Solves the core research problem: transforming hundreds of
+     unranked accessibility barriers into an actionable, defensible backlog prioritized
+     by multi-criteria optimization rather than subjective intuition or raw frequency.
+   - Technical & Architectural Rationale: Provides interactive controls (sliders, weight
+     profile presets, checkboxes) connected directly to `core.mcdm_bridge.run_prioritization()`.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Filters candidate barriers based on site, page, and verification status.
+   - Accepts criterion weight allocations across C1-C6 (summing to 100%).
+   - Executes Fuzzy TOPSIS (computing Closeness Coefficients CC_i) and VIKOR (computing Q_i).
+   - Generates side-by-side priority tables with visual delta indicators (|TOPSIS Rank - VIKOR Rank|).
+   - Shows detailed per-barrier cards with criteria breakdown bars and concrete remediation code fixes.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Uses `core.sensitivity.PRESET_WEIGHT_PROFILES` for quick stakeholder presets.
+   - Calls `core.mcdm_bridge.run_prioritization(filtered_df, weights)`.
+   - Renders interactive Plotly scatterplots and data tables with custom styling.
+================================================================================
 """
 
 from __future__ import annotations

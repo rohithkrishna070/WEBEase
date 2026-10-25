@@ -1,7 +1,32 @@
-"""SmartWeb Access - Main Portal and Dashboard Entry Point.
+"""
+================================================================================
+MODULE: app (SmartWeb Access Main Application Entry Point)
+================================================================================
+1. WHAT THIS FILE DOES:
+   Acts as the primary entry point and home portal for the Streamlit multi-page
+   decision support dashboard. It displays system overview metrics, problem context,
+   decision criteria descriptions, and guided sidebar navigation.
 
-A Soft Computing Decision Support System for Prioritizing Accessibility Repairs
-on Public-Service Websites using Fuzzy TOPSIS and VIKOR.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Introduces users, reviewers, and evaluators to the core
+     research dilemma: accessibility audits create huge unranked lists of errors, but
+     development teams have finite capacity. Explains how decoupling barrier severity
+     from essential-task impact solves this dilemma.
+   - Technical & Architectural Rationale: Streamlit uses the root `app.py` script as the
+     entry execution script. Launching `streamlit run app.py` bootstraps the server,
+     initializes the layout, loads SQLite statistics, and discovers sub-pages in `pages/`.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Displays real-time executive metrics: audited websites, evaluated pages, total barriers,
+     and critical-task barriers.
+   - Formulates the research problem and contrasts Fuzzy TOPSIS vs VIKOR paradigms.
+   - Explains the 6 Multi-Criteria Decision Making criteria (C1-C6) and their optimization directions.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Calls `setup_page_header()` to configure viewport, CSS styling, and auto-seed database.
+   - Queries `get_stats()` from `core.database` for high-level aggregate counts.
+   - Renders responsive multi-column layouts with `st.columns()` and formatted Markdown cards.
+================================================================================
 """
 
 from __future__ import annotations

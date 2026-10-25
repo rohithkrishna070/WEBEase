@@ -1,8 +1,30 @@
-"""Page 3: Accessibility Issue Management & Audit Verification Module.
+"""
+================================================================================
+MODULE: pages.3_Accessibility_Issues
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides the core accessibility issue repository, search and filter engine,
+   manual audit recording form, multi-tool audit importer, and a human-verification triage queue.
 
-Provides comprehensive issue exploration, multi-criteria filtering, verified issue inspection,
-manual audit recording, multi-tool audit importing (Lighthouse, Axe, WAVE),
-and an explicit manual review triage queue.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Raw automated accessibility scans produce high rates of false
+     positives and lack qualitative context (e.g. how badly a broken button impairs a screen
+     reader user). A dedicated triage workstation allows accessibility specialists to review
+     evidence, assign qualitative ratings, discard false positives, and mark issues as Human-Verified.
+   - Technical & Architectural Rationale: Centralizes all CRUD interactions for `accessibility_issues`,
+     integrates `core.importer`, and provides faceted search across severity, WCAG criteria, and status.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Repository Tab: Interactive data grid with search, filtering, and detail drawers showing evidence and code fixes.
+   - Record Manual Issue Tab: Form allowing accessibility auditors to record manual keyboard or screen reader findings.
+   - Import Audits Tab: Drag-and-drop file uploader for Axe CSV, Lighthouse JSON, and WAVE exports.
+   - Verification Triage Tab: Dedicated workflow to convert unreviewed automated scans into human-verified violations.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Queries `core.database.load_all_issues()` and `filter_issues()`.
+   - Uses `st.form()` blocks to isolate input state and prevent premature page re-runs.
+   - Integrates `core.importer.import_multi_tool_audit()` and `core.validator.validate_issue_fields()`.
+================================================================================
 """
 
 from __future__ import annotations

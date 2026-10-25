@@ -1,7 +1,30 @@
-"""Page 7: Research Data Management, Export & Reproducibility.
+"""
+================================================================================
+MODULE: pages.7_Data_and_Export
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides the research data management, report generation, and export hub, allowing
+   stakeholders to download prioritized repair outputs in CSV, JSON, and comprehensive
+   Markdown research reports for compliance audits and reproducibility verification.
 
-Exports prioritized repair rankings, input audit data, and comprehensive research reports
-recording algorithm variants, criterion weights, and evaluation settings for scientific reproducibility.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: A decision support tool must not be a black box. Scientific
+     integrity and public administration demand transparent provenance. Exporting full
+     reproducibility dossiers enables external auditors and academic reviewers to independently
+     verify rankings using the exact mathematical parameters recorded during the session.
+   - Technical & Architectural Rationale: Connects Streamlit download buttons (`st.download_button`)
+     directly to `core.exporter` serialization functions and provides database maintenance controls.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Formats prioritized issues with ranking metrics into tabular CSV files.
+   - Archives raw issues, weights vector, and correlation stats into structured JSON.
+   - Generates publication-ready Markdown research reports summarizing methodology and findings.
+   - Displays database reset and re-seeding controls.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Calls `core.exporter.export_to_csv()`, `export_to_json()`, and `generate_research_reproducibility_report()`.
+   - Uses `core.database.seed_if_empty()` and SQLite connection operations.
+================================================================================
 """
 
 from __future__ import annotations

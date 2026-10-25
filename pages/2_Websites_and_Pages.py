@@ -1,7 +1,31 @@
-"""Page 2: Websites and Pages Catalog & Registration.
+"""
+================================================================================
+MODULE: pages.2_Websites_and_Pages
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides institutional entity management, essential-task page registration,
+   and safe single-page public URL accessibility scanning.
 
-Manage institutional web properties, register essential citizen service pages,
-and execute safe, single-page public URL accessibility inspections.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Accessibility is context-dependent: a contrast error on a
+     homepage marketing banner is vastly different from an unreadable form field on a
+     disability bus pass application page. Registering websites and tagging critical
+     journey pages establishes the operational context needed for Criterion C2 (Task Impact).
+   - Technical & Architectural Rationale: Provides full CRUD interfaces for the `websites`
+     and `pages` tables and wires the safe single-page URL scanner into the UI.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Allows users to add, update, or delete institutional web portals.
+   - Allows registering individual URLs and specifying whether each page is a critical citizen service.
+   - Integrates the ethical public URL inspector: scans any public page and stages findings
+     as `Unverified Automated Detection` in the database.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Uses `st.tabs()` to organize Directory, Register Website, Register Page, and Live Inspector.
+   - Form submission handlers interact with `core.database.upsert_registered_website()`,
+     `upsert_registered_page()`, and `core.safe_scanner.scan_public_url()`.
+   - Validates URL inputs via `core.validator.validate_url()`.
+================================================================================
 """
 
 from __future__ import annotations

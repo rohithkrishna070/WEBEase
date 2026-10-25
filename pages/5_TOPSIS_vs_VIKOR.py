@@ -1,7 +1,36 @@
-"""Page 5: Comparative Research - Fuzzy TOPSIS vs. VIKOR.
+"""
+================================================================================
+MODULE: pages.5_TOPSIS_vs_VIKOR
+================================================================================
+1. WHAT THIS FILE DOES:
+   Conducts rigorous academic comparative analysis between Fuzzy TOPSIS and VIKOR,
+   evaluating statistical rank correlation (Spearman rho, Kendall tau), rank divergences,
+   trade-off mechanics, and VIKOR compromise solution condition verification.
 
-Rigorous comparative multi-criteria decision analysis evaluating algorithmic
-concordance, rank divergences, trade-off mechanics, and compromise solutions.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: TOPSIS and VIKOR embody fundamentally different decision-making
+     philosophies. TOPSIS uses vector normalization and geometric Euclidean distance to
+     an ideal point (which can allow high performance on one criterion to mask an extreme flaw
+     on another). VIKOR uses linear normalization and aggregates group utility (Manhattan)
+     and individual regret (Chebyshev) to find an acceptable compromise. Comparing them reveals
+     methodological trade-offs in accessibility prioritization.
+   - Technical & Architectural Rationale: Provides interactive research tooling: rank correlation
+     heatmaps, scatter correlation plots, rank difference histograms, and automated verification
+     of VIKOR Condition 1 (Acceptable Advantage) and Condition 2 (Acceptable Stability).
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Evaluates inter-method concordance:
+     * Spearman's Rank Correlation Coefficient (rho): measures monotonic agreement.
+     * Kendall's Tau (tau): measures pairwise rank concordances.
+   - Dissects divergent cases: highlights issues where TOPSIS and VIKOR disagree substantially
+     and explains why (e.g. high severity but high repair effort causing VIKOR regret penalty).
+   - Validates whether VIKOR identifies a single clear compromise solution or a compromise set.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Executes `run_prioritization()` with user-selected weight profiles.
+   - Plots interactive comparisons via `plotly.graph_objects` and `plotly.express`.
+   - Displays detailed mathematical condition checks (C1 & C2) with mathematical formulas.
+================================================================================
 """
 
 from __future__ import annotations

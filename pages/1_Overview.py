@@ -1,7 +1,30 @@
-"""Page 1: Overview and Portfolio Research Analytics.
+"""
+================================================================================
+MODULE: pages.1_Overview
+================================================================================
+1. WHAT THIS FILE DOES:
+   Renders the Portfolio Research Analytics & Overview dashboard, visualizing
+   portfolio-wide distributions of accessibility barriers, audit provenance,
+   severity classifications, and essential-task impact across institutions.
 
-Presents portfolio-wide distributions of accessibility barriers, audit provenance,
-barrier severity, task criticality, and demonstration benchmarks.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Decision makers need macro-level situational awareness
+     before drilling into individual algorithm runs. Demonstrates the breakdown of
+     barriers across the 5 public institutions and highlights where critical citizen
+     service barriers are concentrated.
+   - Technical & Architectural Rationale: Provides interactive visual data exploration
+     using Plotly charts and Streamlit metrics, querying SQLite directly.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Aggregates issues by institutional website and essential citizen journey tasks.
+   - Visualizes audit provenance (automated vs manual vs synthetic benchmarks).
+   - Explores the distribution of severity, affected assistive tech groups, and repair efforts.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Reads data via `core.database.load_all_issues()` and `get_stats()`.
+   - Uses `plotly.express` (`px.bar`, `px.pie`, `px.sunburst`) to build interactive visual charts.
+   - Implements responsive Streamlit columns for scorecard metrics.
+================================================================================
 """
 
 from __future__ import annotations

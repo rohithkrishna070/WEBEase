@@ -1,7 +1,32 @@
-"""Page 6: Sensitivity Analysis and Decision Robustness Testing.
+"""
+================================================================================
+MODULE: pages.6_Sensitivity_Analysis
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides interactive visual sensitivity experiments to test decision robustness,
+   tracking rank stability across preset organizational profiles, single-criterion weight
+   sweeps, and scenario appearance frequencies.
 
-Evaluates ranking stability, rank inversion risks, and scenario appearance frequencies
-under varying criterion weights and organizational priority profiles.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Decision makers need to know whether the prioritization is
+     fragile to subjective weight choices. If an organization shifts emphasis from
+     "Task Impact" to "Repair Effort", which repairs remain robustly in the top echelon?
+     This page provides the empirical answer through multi-scenario stress-testing.
+   - Technical & Architectural Rationale: Visualizes outputs from `core.sensitivity`
+     using parallel coordinate charts, rank trajectory line graphs, and stability frequency grids.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Evaluates issues across 5 stakeholder archetypes (Balanced, Task Critical, Quick Wins, etc.).
+   - Visualizes rank trajectories: shows how an issue's rank changes as a single criterion's
+     weight varies continuously from 5% to 70%.
+   - Computes Scenario Frequency: the number of distinct organizational scenarios in which an
+     issue finishes in the Top-3 or Top-5 (a measure of decision stability, not probability).
+
+4. HOW IT WORKS TECHNICALLY:
+   - Uses `core.sensitivity.compare_profiles()`, `run_weight_sweep()`, and `calculate_scenario_stability()`.
+   - Uses Plotly Express line charts to plot rank trajectory curves against weight changes.
+   - Renders interactive dataframes highlighting stable vs volatile repairs.
+================================================================================
 """
 
 from __future__ import annotations
