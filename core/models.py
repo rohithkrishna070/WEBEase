@@ -1,7 +1,34 @@
-"""Data models, enums, and type definitions for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.models
+================================================================================
+1. WHAT THIS FILE DOES:
+   Defines the complete canonical data models, strict typing schemas, enums,
+   linguistic-to-fuzzy scales, and data transfer classes for the entire system.
 
-Defines schemas for accessibility issues, criteria weights, fuzzy scales,
-prioritization results, registered websites/pages, and audit verification types.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Accessibility auditing involves diverse criteria (technical
+     severity vs citizen task criticality vs user disability impact). Having a unified
+     domain model prevents schema divergence and ambiguity across modules.
+   - Technical & Architectural Rationale: Acts as the Single Source of Truth (SSOT).
+     Prevents type errors, ensures consistent serialization/deserialization between
+     SQLite, Pandas DataFrames, and Streamlit UI forms, and provides validation constants.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Models accessibility barriers across 6 key evaluation criteria (C1-C6).
+   - Maps subjective human/expert evaluations (e.g. "High", "Very High") into
+     Triangular Fuzzy Numbers (TFN: l, m, u) and crisp numeric approximations.
+   - Differentiates between raw automated tool scans, human-verified findings,
+     and synthetic research benchmarks.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Uses Python `dataclasses` (`@dataclass`) for structured objects (`AccessibilityIssue`,
+     `RegisteredWebsite`, `RegisteredPage`, `CriterionWeights`, `PrioritizationResult`).
+   - Uses string-backed `Enum` subclasses (`IssueType`, `IssueStatus`, `RecordType`,
+     `AuditMethod`, `VerificationStatus`) for immutable validation choices.
+   - Provides lookup dictionaries (`LINGUISTIC_BENEFIT_SCALE`, `LINGUISTIC_EFFORT_SCALE`,
+     `CRISP_DEF_SCALE`) defining exact Triangular Fuzzy Number tuples (lower, modal, upper).
+================================================================================
 """
 
 from __future__ import annotations

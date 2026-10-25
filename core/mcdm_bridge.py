@@ -1,8 +1,37 @@
-"""MCDM Orchestration Bridge for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.mcdm_bridge
+================================================================================
+1. WHAT THIS FILE DOES:
+   Acts as the central coordination adapter that bridges raw database records
+   (or UI DataFrames) into mathematical decision matrices, executes Fuzzy TOPSIS
+   and VIKOR simultaneously, and calculates statistical concordance (Spearman rho, Kendall tau).
 
-Maps qualitative and quantitative accessibility audit fields to Fuzzy Numbers
-and Crisp decision matrices, coordinates execution of Fuzzy TOPSIS and VIKOR,
-and computes comparative rank correlation statistics.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Decouples raw tabular accessibility data (strings like "High",
+     "Critical", page counts) from abstract mathematical algorithms (matrices of float tuples).
+     Ensures consistent transformation across both algorithms for fair comparison.
+   - Technical & Architectural Rationale: Prevents code duplication across Streamlit
+     pages and sensitivity analysis modules. Provides a single unified function
+     `run_prioritization()` that returns fully enriched DataFrames ready for display or export.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Maps qualitative criteria into:
+     * Triangular Fuzzy Numbers (TFNs) for Fuzzy TOPSIS and Fuzzy VIKOR.
+     * Crisp numeric values (1.0 to 5.0) for Classical VIKOR.
+   - Sets optimization directions:
+     * Benefit (maximize priority): C1 Severity, C2 Task Impact, C3 Affected Pages,
+       C4 User Impact, C6 Frequency.
+     * Cost (lower effort = higher priority): C5 Repair Effort.
+   - Runs both algorithms and calculates rank correlation to assess agreement.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Helper mapping functions: `_map_to_tfn()`, `_map_to_crisp()`, `_frequency_to_tfn()`,
+     and `_log_pages_to_tfn()`.
+   - Normalizes criterion weights using `CriterionWeights.normalize()`.
+   - Computes Spearman rank correlation (`scipy.stats.spearmanr`) and Kendall Tau (`scipy.stats.kendalltau`).
+   - Appends rank columns (`topsis_rank`, `vikor_rank`, `topsis_score`, `vikor_q`) to output DataFrame.
+================================================================================
 """
 
 from __future__ import annotations

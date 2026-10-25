@@ -1,4 +1,30 @@
-"""Shared UI styling, components, and helper utilities for SmartWeb Access."""
+"""
+================================================================================
+MODULE: core.ui_common
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides shared user interface initialization, custom CSS injection, navigation
+   banners, metric card components, and database bootstrapping for Streamlit pages.
+
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: A multi-page research dashboard requires consistent branding,
+     clear research disclosure notices, responsive layout configurations, and identical
+     sidebar controls across all pages without duplicating UI boilerplate code.
+   - Technical & Architectural Rationale: Centralizes Streamlit `st.set_page_config`,
+     session state management, CSS styling, and first-time database auto-seeding.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Sets the page browser title, favicon, and wide layout.
+   - Automatically initializes and seeds the SQLite database on first app access if empty.
+   - Injects custom CSS styling for typography, metric scorecards, and research callouts.
+   - Displays persistent sidebar research notices and data provenance disclaimers.
+
+4. HOW IT WORKS TECHNICALLY:
+   - `setup_page_header()`: Invokes `st.set_page_config()`, executes `seed_if_empty()` guarded
+     by `st.session_state["db_initialized"]`, injects HTML `<style>` blocks, and renders headers.
+   - `render_badge()`: Helper for HTML status badges with color-coded CSS.
+================================================================================
+"""
 
 from __future__ import annotations
 

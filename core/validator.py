@@ -1,7 +1,31 @@
-"""Data validation routines for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.validator
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides comprehensive validation gates for user inputs, URL formats,
+   linguistic criteria ratings, duplicate ID checks, and uploaded CSV file schemas.
 
-Validates required fields, URL structures, linguistic ratings, duplicate IDs,
-and CSV upload payloads.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: A Multi-Criteria Decision Support System is highly sensitive
+     to corrupt or incomplete input data. Invalid or missing ratings (e.g. non-existent
+     linguistic terms or negative values) would break matrix normalization in TOPSIS/VIKOR.
+   - Technical & Architectural Rationale: Centralizes data hygiene and defensive validation.
+     Provides clear, user-friendly error messages when invalid data is entered in UI forms
+     or uploaded in CSV batch files.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Validates that mandatory audit fields (issue ID, website, page, criteria ratings) are populated.
+   - Enforces that linguistic terms match recognized scales ("Very Low", "Low", "Medium", "High", "Very High").
+   - Ensures URLs adhere to RFC web schemes (http/https).
+   - Validates CSV file uploads row-by-row, segregating valid rows from invalid rows with error annotations.
+
+4. HOW IT WORKS TECHNICALLY:
+   - `validate_url()`: Regex and `urllib.parse.urlparse` domain validation.
+   - `validate_issue_fields()`: Checks required keys, rating enum membership, and ID formats.
+   - `validate_csv_upload()`: Reads CSV buffers via pandas, identifies missing columns, empty rows,
+     and validates records against database collision sets.
+================================================================================
 """
 
 from __future__ import annotations

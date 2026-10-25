@@ -1,17 +1,35 @@
-"""Sensitivity Analysis and Decision Robustness Engine for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.sensitivity
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides the sensitivity analysis and decision robustness testing engine,
+   evaluating how shifts in criterion weights affect Fuzzy TOPSIS and VIKOR rankings.
 
-Analyzes how variations in criterion weights impact Fuzzy TOPSIS and VIKOR
-prioritization outcomes, measuring rank stability, scenario frequencies, and
-rank inversion risks across different organizational priority profiles.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: In any decision support system, stakeholders (e.g. engineering
+     leads vs disability advocates vs legal officers) will value criteria differently.
+     If a top-ranked repair drops drastically with a tiny 5% weight shift, the recommendation
+     is fragile. Robust solutions maintain top priority across multiple stakeholder perspectives.
+   - Technical & Architectural Rationale: Encapsulates systematic weight perturbation,
+     profile scenario simulation, and rank stability metric computation away from the UI.
 
-References
-----------
-1. Triantaphyllou, E., & Sánchez, A. (1997). A sensitivity analysis approach for
-   some deterministic multi-criteria decision-making methods. Decision Sciences,
-   28(1), 151-194.
-2. Opricovic, S., & Tzeng, G.-H. (2004). Compromise solution by MCDM methods:
-   A comparative analysis of VIKOR and TOPSIS. European Journal of Operational
-   Research, 156(2), 445-455.
+3. HOW IT WORKS CONCEPTUALLY:
+   - Evaluates pre-configured organizational archetypes:
+     * Balanced Focus (default)
+     * Essential-Task Critical (advocate focus)
+     * Quick Wins (low effort engineering focus)
+     * WCAG Barrier Severity First (strict compliance focus)
+     * Wide-Reach / Scaled Pages First (site-wide blast radius focus)
+   - Performs Single-Criterion Weight Sweeps (varying w_k from 0.05 to 0.70 while proportionally
+     adjusting remaining weights to sum to 1.0) to observe rank trajectory curves.
+   - Calculates scenario appearance frequencies (e.g. appearing in Top-3 in 4 of 5 profiles).
+
+4. HOW IT WORKS TECHNICALLY:
+   - `run_weight_sweep()`: Computes rankings across a linear range of weights for a chosen criterion.
+   - `compare_profiles()`: Runs all preset profiles and tracks per-issue rank trajectories.
+   - `calculate_scenario_stability()`: Aggregates mean rank, standard deviation, and Top-K frequencies.
+================================================================================
 """
 
 from __future__ import annotations

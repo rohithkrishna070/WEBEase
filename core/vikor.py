@@ -1,26 +1,45 @@
-"""VIKOR (ViseKriterijumska Optimizacija I Kompromisno Resenje) Method.
+"""
+================================================================================
+MODULE: core.vikor
+================================================================================
+1. WHAT THIS FILE DOES:
+   Implements the VIKOR (ViseKriterijumska Optimizacija I Kompromisno Resenje)
+   multi-criteria compromise ranking engine in two rigorous formulations:
+   - Classical VIKOR (Opricovic & Tzeng, 2004) with explicit centroid defuzzification.
+   - Fuzzy VIKOR (Opricovic, 2011) directly computing on Triangular Fuzzy Numbers (TFNs).
 
-Implements the multi-criteria compromise ranking algorithm developed by Serafim Opricovic
-to determine compromise solutions in the presence of conflicting criteria.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: In accessibility remediation, criteria inherently conflict:
+     maximum barrier severity and essential-task impact often demand high engineering effort.
+     While TOPSIS selects solutions closest to an ideal point (which might have unacceptable
+     worst-case individual scores), VIKOR focuses on finding a *compromise solution* that
+     balances maximum "group utility" (majority benefit) with minimum "individual regret"
+     (preventing unacceptable extreme flaws).
+   - Technical & Architectural Rationale: Provides a pure mathematical implementation
+     with comprehensive verification of VIKOR's formal compromise conditions:
+     Condition 1 (Acceptable Advantage: Q(A2) - Q(A1) >= DQ) and
+     Condition 2 (Acceptable Stability in Decision Making: A1 best in S and/or R).
 
-This module provides two documented, mathematically distinct formulations:
-1. Classical VIKOR (Opricovic & Tzeng, 2004): Operates on crisp evaluation matrices.
-   When qualitative fuzzy ratings are provided, an explicit, justified defuzzification
-   step (Centroid / Center of Area) is performed prior to ranking.
-2. Fuzzy VIKOR (Opricovic, 2011): Directly operates on Triangular Fuzzy Numbers (TFNs)
-   using vertex separation distances without premature defuzzification.
+3. HOW IT WORKS CONCEPTUALLY:
+   - Determines the best f_j* and worst f_j^- values for each criterion j.
+   - Computes:
+     * S_i (Group Utility / Manhattan distance): sum_j [w_j * (f_j* - f_ij) / (f_j* - f_j^-)]
+     * R_i (Individual Regret / Chebyshev distance): max_j [w_j * (f_j* - f_ij) / (f_j* - f_j^-)]
+     * Q_i (Compromise Index): v * (S_i - S*) / (S^- - S*) + (1 - v) * (R_i - R*) / (R^- - R*)
+       where v is the weight of strategy of maximum group utility (typically v=0.5).
+   - Ranks alternatives by ascending Q_i (lower Q = higher repair priority).
+   - Validates whether top candidate(s) meet Acceptable Advantage and Stability.
 
-References
-----------
-1. Opricovic, S., & Tzeng, G.-H. (2004). Compromise solution by MCDM methods:
-   A comparative analysis of VIKOR and TOPSIS. European Journal of Operational
-   Research, 156(2), 445-455.
-   https://doi.org/10.1016/S0377-2217(03)00020-1
-2. Opricovic, S. (2011). Fuzzy VIKOR with an application to water resources planning.
-   Water Resources Management, 25(5), 1297-1315.
-   https://doi.org/10.1007/s11269-010-9745-3
-3. Opricovic, S. (1998). Multicriteria Optimization of Civil Engineering Systems.
-   Faculty of Civil Engineering, Belgrade, 302(1), 136-148.
+4. HOW IT WORKS TECHNICALLY:
+   - Implements both `vikor_crisp()` and `fuzzy_vikor()` algorithms.
+   - Structured results returned in typed `VIKORResult` dataclass.
+   - Computes DQ threshold = 1 / (J - 1) for alternative set size J.
+   - Handles boundary edge cases (all identical scores, zero span, single alternative).
+
+References:
+- Opricovic, S., & Tzeng, G.-H. (2004). Compromise solution by MCDM methods: A comparative analysis.
+- Opricovic, S. (2011). Fuzzy VIKOR with an application to water resources planning.
+================================================================================
 """
 
 from __future__ import annotations

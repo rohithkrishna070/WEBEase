@@ -1,9 +1,34 @@
-"""Multi-Tool Audit Adapters for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.tool_adapters
+================================================================================
+1. WHAT THIS FILE DOES:
+   Parses and normalizes external accessibility audit files exported from industry tools
+   (Google Lighthouse JSON/CSV, Deque Axe-core CSV, and WebAIM WAVE CSV) into the
+   canonical SmartWeb Access data model.
 
-Normalizes diverse accessibility audit exports from Google Lighthouse, Axe-core,
-WAVE, and generic CSV tools into a standardized model.
-Automated detections are strictly categorized as 'Unverified Automated Detection'
-with unverified WCAG status (wcag_verified = 0) pending human review.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Organizations rarely audit websites with a single tool; they
+     combine Lighthouse CI pipelines, manual Axe browser extensions, and WAVE reports.
+     Each tool uses different naming conventions (e.g. Axe uses "impact: critical",
+     Lighthouse uses audit IDs and scores 0-1, WAVE uses error codes). A normalized adapter
+     layer ingests all disparate outputs into a unified multi-criteria format.
+   - Technical & Architectural Rationale: Implements the Adapter Pattern. Isolates third-party
+     schema idiosyncrasies from the core database and decision engine.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Detects the tool format automatically from file columns or JSON keys.
+   - Maps tool-specific violation rules to WCAG 2.1 Success Criteria.
+   - Maps severity scores (e.g. Axe "serious" -> SmartWeb "High" severity and "High" user impact).
+   - Flags all automated outputs as `Unverified Automated Detection` (`wcag_verified=0`)
+     so human auditors can review and confirm findings before final decision weighting.
+
+4. HOW IT WORKS TECHNICALLY:
+   - `detect_tool_format()`: Inspects column header tokens.
+   - `parse_axe_csv()`: Extracts rule IDs, selectors, impact levels, and help URLs.
+   - `parse_wave_csv()`: Extracts issue types, element selectors, and descriptions.
+   - `parse_lighthouse_json()`: Reads Lighthouse audit categories, extracting failed audits (`score < 1`).
+================================================================================
 """
 
 from __future__ import annotations

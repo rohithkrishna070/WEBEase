@@ -1,21 +1,45 @@
-"""Fuzzy TOPSIS (Technique for Order Preference by Similarity to Ideal Solution).
+"""
+================================================================================
+MODULE: core.fuzzy_topsis
+================================================================================
+1. WHAT THIS FILE DOES:
+   Implements the full mathematical engine for Chen (2000) Fuzzy TOPSIS (Technique
+   for Order Preference by Similarity to Ideal Solution) using Triangular Fuzzy Numbers (TFNs).
 
-Implements the classical Chen (2000) Fuzzy TOPSIS methodology using Triangular
-Fuzzy Numbers (TFNs) and vertex distance metrics for multi-criteria decision making.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Human evaluations of web accessibility (e.g. "severe barrier",
+     "moderate effort") possess inherent vagueness and cognitive ambiguity. Crisp numbers
+     oversimplify real-world auditor judgments. Fuzzy TOPSIS models this uncertainty using
+     triangular membership functions, measuring which accessibility repair is closest to
+     the Fuzzy Positive-Ideal Solution (FPIS) and furthest from the Fuzzy Negative-Ideal Solution (FNIS).
+   - Technical & Architectural Rationale: Pure, self-contained mathematical library
+     independent of databases or web frameworks. Can be tested rigorously, verified with
+     numerical edge cases (single alternative, zero-variance, identical scores), and reused.
 
-References
-----------
-1. Chen, C.-T. (2000). Extensions of the TOPSIS for group decision-making under
-   fuzzy environment. Fuzzy Sets and Systems, 114(1), 1-9.
-   https://doi.org/10.1016/S0165-0114(97)00377-1
-2. Jahanshahloo, G. R., Hosseinzadeh Lotfi, F., & Izadikhah, M. (2006). Extension
-   of the TOPSIS method for decision-making problems with fuzzy data.
-   Applied Mathematics and Computation, 181(2), 1544-1551.
-   https://doi.org/10.1016/j.amc.2006.02.057
-3. Opricovic, S., & Tzeng, G.-H. (2004). Compromise solution by MCDM methods:
-   A comparative analysis of VIKOR and TOPSIS. European Journal of Operational
-   Research, 156(2), 445-455.
-   https://doi.org/10.1016/S0377-2217(03)00020-1
+3. HOW IT WORKS CONCEPTUALLY:
+   - Takes alternatives (accessibility issues) evaluated on m criteria (C1-C6).
+   - Constructs a fuzzy decision matrix of TFNs: (a, b, c).
+   - Normalizes matrix:
+     * Benefit criteria: r_ij = (a/c_max*, b/c_max*, c/c_max*)
+     * Cost criteria (e.g. Repair Effort): r_ij = (a_min-/c, a_min-/b, a_min-/a)
+   - Multiplies by criterion weights: v_ij = r_ij (*) w_j
+   - Determines FPIS (A*) and FNIS (A-).
+   - Calculates vertex Euclidean distances d*(A_i, A*) and d-(A_i, A-).
+   - Computes Closeness Coefficient CC_i = d- / (d* + d-).
+   - Ranks alternatives in descending order of CC_i (higher CC = higher repair priority).
+
+4. HOW IT WORKS TECHNICALLY:
+   - Encapsulates state and results in `FuzzyTOPSISResult` dataclass.
+   - Uses `numpy` for efficient vectorized array processing.
+   - Implements `vertex_distance_tfn()` using the Chen (2000) formula:
+     d(A, B) = sqrt(1/3 * [(a1-b1)^2 + (a2-b2)^2 + (a3-b3)^2]).
+   - Handles edge cases (zero denominator, identical distances, single alternative).
+
+References:
+- Chen, C.-T. (2000). Extensions of the TOPSIS for group decision-making under fuzzy environment.
+  Fuzzy Sets and Systems, 114(1), 1-9.
+- Opricovic, S., & Tzeng, G.-H. (2004). Compromise solution by MCDM methods: A comparative analysis.
+================================================================================
 """
 
 from __future__ import annotations

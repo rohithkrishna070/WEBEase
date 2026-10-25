@@ -1,7 +1,30 @@
-"""Multi-Tool Audit and Evidence Import Engine for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.importer
+================================================================================
+1. WHAT THIS FILE DOES:
+   Orchestrates batch importing of accessibility audit evidence into the SQLite database,
+   supporting standard SmartWeb CSVs, Lighthouse JSON, Axe CSV, and WAVE CSV files.
 
-Processes and normalizes audit files from Google Lighthouse, Axe-core, WAVE,
-and SmartWeb Access standard CSVs, handling schema differences and validation.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Accessibility teams need to ingest audit files from multiple
+     auditors and automated tools into a single central repository without manual retyping.
+   - Technical & Architectural Rationale: Coordinates between `core.validator` (for schema
+     checks), `core.tool_adapters` (for tool-specific parsing), and `core.database` (for
+     persisting valid rows with transaction integrity).
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Takes file bytes or streams from Streamlit file upload widgets.
+   - Identifies the audit tool and parses the file into standardized issue objects.
+   - Evaluates whether issues should overwrite existing records or be skipped if duplicate IDs exist.
+   - Records metadata (e.g. tool name, audit method, verification status).
+   - Returns a structured status summary report (total rows, imported, skipped, errors).
+
+4. HOW IT WORKS TECHNICALLY:
+   - `import_csv_data()`: Handles standard SmartWeb schema CSVs using `validate_csv_upload()`.
+   - `import_multi_tool_audit()`: Auto-detects format, runs the appropriate adapter,
+     and persists records via `upsert_issue()`.
+================================================================================
 """
 
 from __future__ import annotations

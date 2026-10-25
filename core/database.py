@@ -1,7 +1,34 @@
-"""SQLite database management for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.database
+================================================================================
+1. WHAT THIS FILE DOES:
+   Manages all SQLite database persistence, table schema creation, migrations,
+   seed data ingestion, and CRUD operations for websites, pages, and accessibility issues.
 
-Provides schema initialization, migrations, seed data ingestion, querying, and persistent
-CRUD operations for audited accessibility issues, registered institutional websites, and pages.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: A decision support system requires reliable, persistent
+     storage of audit records, metadata, verification states, and institutional properties
+     so decisions can be tracked and updated over time without relying on ephemeral in-memory state.
+   - Technical & Architectural Rationale: Provides an embedded, zero-configuration SQL
+     store using Python's standard `sqlite3` module. Abstracts SQL queries away from UI
+     pages, returning clean Pandas DataFrames or typed dataclass objects.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Maintains relational entities:
+     * `websites`: Institutional properties (universities, transit, civic portals).
+     * `pages`: Individual evaluated URLs, tagging whether each is an essential citizen journey.
+     * `accessibility_issues`: Specific WCAG violations, rating criteria (C1-C6), audit provenance,
+       verification status, and fix recommendations.
+   - Automatically seeds the database from `sample_issues.csv` if empty on first startup.
+
+4. HOW IT WORKS TECHNICALLY:
+   - Uses parameterized SQL statements (`?` placeholders) to prevent SQL injection.
+   - Implements schema migrations (`init_db`) ensuring backwards compatibility.
+   - Uses `sqlite3.Row` row factories for dictionary-like column access.
+   - Exposes clean high-level helpers: `load_all_issues()`, `upsert_issue()`, `get_stats()`,
+     `get_registered_websites()`, and `get_registered_pages()`.
+================================================================================
 """
 
 from __future__ import annotations

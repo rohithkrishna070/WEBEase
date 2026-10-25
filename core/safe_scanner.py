@@ -1,8 +1,37 @@
-"""Safe single-page accessibility scanner for public web URLs.
+"""
+================================================================================
+MODULE: core.safe_scanner
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides a safe, single-page DOM accessibility scanner that can fetch and evaluate
+   public web pages without launching headless browser instances or violating ethical web constraints.
 
-Provides safe, deterministic DOM accessibility auditing with comprehensive SSRF protection,
-private-network blocking, robots.txt compliance, timeouts, and single-page restrictions.
-Findings are strictly tagged as 'Unverified Automated Detection' requiring human review.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Allows users to test live institutional pages for basic WCAG
+     violations (missing alt text, unlabeled form fields, empty buttons, broken headings)
+     while adhering to academic and ethical audit boundaries. All scanner detections
+     are explicitly marked as `Unverified Automated Detection` to avoid misleading auditors.
+   - Technical & Architectural Rationale: Prevents Server-Side Request Forgery (SSRF),
+     denial-of-service, or crawling traps. Blocks private IP subnets (127.0.0.1, 10.0.0.0/8,
+     192.168.0.0/16, AWS metadata 169.254.169.254), checks `robots.txt`, enforces strict
+     HTTP timeouts and response payload byte limits, and never recurses into links.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Validates target URL scheme (HTTP/HTTPS only) and verifies that host resolves to a public IP.
+   - Fetches target HTML stream respecting response size limit (e.g. 2 MB max) and timeouts (5s).
+   - Parses the HTML DOM using Python's native streaming parser to extract element tags and attributes.
+   - Runs deterministic audit rules:
+     * Images missing `alt` attributes or with suspicious filenames.
+     * Inputs lacking `<label>`, `aria-label`, or `aria-labelledby`.
+     * Buttons without textual or accessible names.
+     * Heading level skips (e.g. `<h1>` followed directly by `<h3>`).
+
+4. HOW IT WORKS TECHNICALLY:
+   - DNS resolution and IP verification with `socket.getaddrinfo` and `ipaddress.ip_address`.
+   - `urllib.robotparser.RobotFileParser` checks crawler permission against custom User-Agent.
+   - `html.parser.HTMLParser` subclass (`_SafeAccessibilityDOMParser`) performs streaming DOM tokens.
+   - Raises structured domain exceptions (`ScanSecurityError`, `RobotsDisallowedError`, `ScanNetworkError`).
+================================================================================
 """
 
 from __future__ import annotations

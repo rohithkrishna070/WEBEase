@@ -1,8 +1,36 @@
-"""Export, Reporting, and Research Reproducibility Utilities for SmartWeb Access.
+"""
+================================================================================
+MODULE: core.exporter
+================================================================================
+1. WHAT THIS FILE DOES:
+   Provides export, reporting, and scientific reproducibility serialization utilities,
+   converting decision matrices, MCDM outputs, and metadata into CSV, JSON, and
+   publication-grade Markdown research reports.
 
-Serializes decision rankings, input audit data, and MCDM algorithmic metadata
-into CSV, JSON, and comprehensive Markdown research reports for scientific review
-and administrative audit compliance.
+2. WHY THIS FILE EXISTS (RATIONALE):
+   - Conceptual Rationale: Academic research and enterprise governance require full
+     auditability. Decision outcomes must be accompanied by exact weight vectors,
+     algorithm formulations, timestamped parameters, and correlation statistics so third
+     parties can independently reproduce the prioritization rankings.
+   - Technical & Architectural Rationale: Centralizes data formatting and document
+     synthesis. Keeps presentation and file generation logic isolated from computation.
+
+3. HOW IT WORKS CONCEPTUALLY:
+   - Formats prioritized issues into standard CSV for data analysis tools (Excel, R, Python).
+   - Generates JSON archives packaging raw issues alongside complete algorithmic metadata.
+   - Generates publication-ready Markdown reports documenting:
+     * Problem statement and dataset notices
+     * Criteria weighting percentages
+     * Inter-method concordance (Spearman rho, Kendall tau)
+     * VIKOR compromise condition validation results
+     * Top-ranked repair action plans with WCAG criteria and remediation guidance.
+
+4. HOW IT WORKS TECHNICALLY:
+   - `export_to_csv()`: Pandas DataFrame string serialization.
+   - `export_to_json()`: Serializes records and metadata dictionaries using `json.dumps`.
+   - `generate_research_reproducibility_report()`: Dynamic markdown template rendering
+     with Markdown tables and formatted parameter sections.
+================================================================================
 """
 
 from __future__ import annotations
